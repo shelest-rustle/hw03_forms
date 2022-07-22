@@ -23,7 +23,7 @@ def index(request):
 def group_list(request, slug):
     template = 'posts/group_list.html'
     group = get_object_or_404(Group, slug=slug)
-    posts = group.posts.all()
+    posts = group.posts.select_related('author').all()
     paginator = Paginator(posts, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -56,18 +56,14 @@ def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     first_30 = post.text[:30]
     posts_count = post.author.posts.count()
-
-    if post.author == request.user:
-        if_author = True
-    else:
-        if_author = False
+    is_author = post.author == request.user
 
     context = {
         'post_id': post_id,
         'post': post,
         'first_30': first_30,
         'posts_count': posts_count,
-        'if_author': if_author
+        'is_author': is_author
     }
     return render(request, template, context)
 

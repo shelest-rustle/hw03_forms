@@ -19,34 +19,28 @@
             <div class="card-header">       
               Новый пост
             </div>
-            <div class="card-body">        
+            <div class="card-body">
+              {% if form.errors %}
+                {% for field in form %}
+                  {% for error in field.errors %}<div class="alert alert-danger">{{ error|escape }}</div>{% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}<div class="alert alert-danger">{{ error|escape }}</div>{% endfor %}
+              {% endif %}      
               <form method="post" action="">
-                {% csrf_token %}     
+                {% csrf_token %}  
+                {% for field in form %}   
                 <div class="form-group row my-3 p-3">
-                  <label for="id_text">
-                    Текст поста
-                    <span class="required text-danger" >*</span>                  
+                  <label for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                    {% if field.field.required %}<span class="required text-danger">*</span>{% endif %}
                   </label>
-                      {{ form.text }}
+                    {% load user_filters %}
+                    {{ field|addclass:'form-control' }}
                   <small id="id_text-help" class="form-text text-muted">
-                    Текст нового поста
+                    {% if field.help_text %}{{ field.help_text }}{% endif %}
                   </small>                  
-                </div>            
-                <div class="form-group row my-3 p-3">
-                  <label for="id_group">
-                    Группа                  
-                  </label>
-                  <select name="group" class="form-control" id="id_group">
-                    <option selected>
-                        {% for group in form.group %}
-                            {{ group }}
-                    </option>
-                        {% endfor %}
-                  </select>
-                  <small id="id_group-help" class="form-text text-muted">
-                    Группа, к которой будет относиться пост
-                  </small>
                 </div>
+                {% endfor %}
                 <div class="d-flex justify-content-end">
                   <button type="submit" class="btn btn-primary">
                     {% if is_edit %}

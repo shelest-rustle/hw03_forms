@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'posts:index'
-LOGOUT_REDIRECT_URL = 'users:logout'
+# LOGOUT_REDIRECT_URL = 'users:logout'
 
 PASSWORD_CHANGE_URL = 'users:password_change_form'
 PASSWORD_CHANGE_DONE_URL = 'users:password_change_done'
